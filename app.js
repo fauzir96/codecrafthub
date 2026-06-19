@@ -7,6 +7,7 @@ const PORT = 5000;
 
 // Middleware to parse incoming JSON payloads
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Path to our JSON database file
 const dataFilePath = path.join(__dirname, 'courses.json');

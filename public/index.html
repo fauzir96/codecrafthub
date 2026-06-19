@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCraftHub - Learning Management</title>
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #A78BFA;
+            --success: #F59E0B;
+            --delete: #EF4444;
+            --delete-hover: #DC2626;
+            --bg: #F8FAFC;
+            --card-bg: #ffffff;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 24px 0;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        header p {
+            text-align: center;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #D97706;
+        }
+
+        .btn-danger {
+            background: var(--delete);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--delete-hover);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #CBD5E1;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .form-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #F1F5F9;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text-light);
+        }
+
+        tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-not-started {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-in-progress {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-completed {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #E2E8F0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 3s forwards;
+            min-width: 260px;
+        }
+
+        .toast.success {
+            background: #10B981;
+        }
+
+        .toast.error {
+            background: var(--delete);
+        }
+
+        .toast.info {
+            background: var(--primary);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            transform: scale(0.95);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+
+        .modal .form-group {
+            margin-bottom: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .card {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+
+            .actions-cell {
+                flex-direction: column;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CodeCraftHub: Your Learning Management Platform</h1>
+            <p>Manage your courses and track your learning progress</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card" style="display: flex; gap: 20px; justify-content: space-around; flex-wrap: wrap; text-align: center;">
+            <div>
+                <h3 id="statTotal" style="font-size: 2rem; color: var(--primary);">0</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">Total Courses</p>
+            </div>
+            <div>
+                <h3 id="statNotStarted" style="font-size: 2rem; color: #92400E;">0</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">Not Started</p>
+            </div>
+            <div>
+                <h3 id="statInProgress" style="font-size: 2rem; color: #1E40AF;">0</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">In Progress</p>
+            </div>
+            <div>
+                <h3 id="statCompleted" style="font-size: 2rem; color: #065F46;">0</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">Completed</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Add New Course</div>
+            <form id="addCourseForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="courseName">Course Name *</label>
+                        <input type="text" id="courseName" placeholder="e.g., Advanced JavaScript" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseStatus">Status *</label>
+                        <select id="courseStatus" required>
+                            <option value="">Select status</option>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="courseDescription">Description *</label>
+                        <textarea id="courseDescription" placeholder="Describe what this course covers..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseTargetDate">Target Date *</label>
+                        <input type="date" id="courseTargetDate" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                        Add Course
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title">All Courses</div>
+            <div id="coursesContainer">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">Edit Course</div>
+            <form id="editCourseForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editName">Course Name *</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Description *</label>
+                    <textarea id="editDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editTargetDate">Target Date *</label>
+                    <input type="date" id="editTargetDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Status *</label>
+                    <select id="editStatus" required>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const API_BASE = '/api/courses';
+
+        const addForm = document.getElementById('addCourseForm');
+        const editForm = document.getElementById('editCourseForm');
+        const editModal = document.getElementById('editModal');
+        const cancelEditBtn = document.getElementById('cancelEdit');
+        const toastContainer = document.getElementById('toastContainer');
+        const coursesContainer = document.getElementById('coursesContainer');
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const d = new Date(dateString);
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function getStatusClass(status) {
+            const map = {
+                'Not Started': 'status-not-started',
+                'In Progress': 'status-in-progress',
+                'Completed': 'status-completed'
+            };
+            return map[status] || 'status-not-started';
+        }
+
+        async function fetchCourses() {
+            coursesContainer.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await fetch(API_BASE);
+                if (!res.ok) throw new Error('Failed to fetch courses');
+                const courses = await res.json();
+                renderCourses(courses);
+            } catch (err) {
+                coursesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>Error loading courses. Please make sure the server is running.</p>
+                        <p style="font-size:0.85rem; margin-top:8px;">${err.message}</p>
+                    </div>
+                `;
+                showToast('Failed to load courses: ' + err.message, 'error');
+            }
+        }
+
+        function renderCourses(courses) {
+            if (!courses.length) {
+                coursesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                        <p>No courses yet. Add your first course above!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = `
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Target Date</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${courses.map(c => `
+                                <tr data-id="${c.id}">
+                                    <td><strong>${escapeHtml(c.name)}</strong></td>
+                                    <td>${escapeHtml(c.description)}</td>
+                                    <td>${formatDate(c.target_date)}</td>
+                                    <td><span class="status-badge ${getStatusClass(c.status)}">${escapeHtml(c.status)}</span></td>
+                                    <td>${formatDate(c.created_at)}</td>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-success btn-sm" onclick="openEditModal(${c.id})">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zM16.862 4.487L19.5 7.125"/></svg>
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteCourse(${c.id})">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12.562 0c.34.059.68.114 1.022.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                                            Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            coursesContainer.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        addForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('courseName').value.trim();
+            const description = document.getElementById('courseDescription').value.trim();
+            const target_date = document.getElementById('courseTargetDate').value;
+            const status = document.getElementById('courseStatus').value;
+
+            if (!name || !description || !target_date || !status) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const btn = addForm.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></span> Adding...';
+
+            try {
+                const res = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description, target_date, status })
+                });
+                if (!res.ok) throw new Error('Failed to add course');
+                addForm.reset();
+                showToast('Course added successfully!', 'success');
+                await fetchCourses();
+                // Panggil kedua fungsi saat halaman pertama kali dibuka
+                fetchCourses();
+                fetchStatistics();
+            } catch (err) {
+                showToast('Error adding course: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+
+        async function openEditModal(id) {
+            try {
+                const res = await fetch(`${API_BASE}/${id}`);
+                if (!res.ok) throw new Error('Failed to fetch course');
+                const course = await res.json();
+                document.getElementById('editId').value = course.id;
+                document.getElementById('editName').value = course.name;
+                document.getElementById('editDescription').value = course.description;
+                document.getElementById('editTargetDate').value = course.target_date;
+                document.getElementById('editStatus').value = course.status;
+                editModal.classList.add('active');
+            } catch (err) {
+                showToast('Error loading course: ' + err.message, 'error');
+            }
+        }
+
+        cancelEditBtn.addEventListener('click', () => {
+            editModal.classList.remove('active');
+        });
+
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) editModal.classList.remove('active');
+        });
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editName').value.trim();
+            const description = document.getElementById('editDescription').value.trim();
+            const target_date = document.getElementById('editTargetDate').value;
+            const status = document.getElementById('editStatus').value;
+
+            if (!name || !description || !target_date || !status) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const btn = editForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const res = await fetch(`${API_BASE}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description, target_date, status })
+                });
+                if (!res.ok) throw new Error('Failed to update course');
+                editModal.classList.remove('active');
+                showToast('Course updated successfully!', 'success');
+                await fetchCourses();
+            } catch (err) {
+                showToast('Error updating course: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        async function deleteCourse(id) {
+            if (!confirm('Are you sure you want to delete this course?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Failed to delete course');
+                showToast('Course deleted successfully!', 'success');
+                await fetchCourses();
+            } catch (err) {
+                showToast('Error deleting course: ' + err.message, 'error');
+            }
+        }
+        // Fungsi untuk mengambil data statistik dari server backend
+        async function fetchStatistics() {
+            try {
+                // Menembak endpoint tantangan bonus yang kita buat di app.js
+                const res = await fetch('/api/courses/stats');
+                if (!res.ok) throw new Error('Gagal mengambil statistik');
+                const stats = await res.json();
+
+                // Mengisi angka ke komponen HTML yang kita buat di atas
+                document.getElementById('statTotal').textContent = stats.total_courses;
+                document.getElementById('statNotStarted').textContent = stats.by_status.not_started;
+                document.getElementById('statInProgress').textContent = stats.by_status.in_progress;
+                document.getElementById('statCompleted').textContent = stats.by_status.completed;
+            } catch (err) {
+                console.error('Gagal memuat statistik:', err);
+            }
+        }
+        fetchCourses();
+    </script>
+</body>
+</html>
